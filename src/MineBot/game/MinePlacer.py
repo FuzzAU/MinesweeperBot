@@ -28,7 +28,7 @@ def getRandomMines(cellList, numberOfMines):
     """
     mineLocations = []
     cellListCopy = cellList
-    for mineNum in range(0, numberOfMines):
+    for mineNum in xrange(numberOfMines):
         randIndex = random.randint(0, len(cellListCopy) - 1)
         mineLocations.append(cellListCopy.pop(randIndex))
     return mineLocations
