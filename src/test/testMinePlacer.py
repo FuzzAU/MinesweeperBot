@@ -27,17 +27,14 @@ class MinePlacementTests(unittest.TestCase):
         # is exceptionally low, provided that the code works as
         # designed
 
-        cells = MinePlacer.generateList(5,5)
+        cells = MinePlacer.generateList(5, 5)
         mines = MinePlacer.getRandomMines(cells, 25)
         # sanity test
-        self.assertEquals(len(mines),25)
+        self.assertEquals(len(mines), 25)
 
         # NB. a mine is a list ATM, list are not hashable
         #     so we transform them into tuples which can
         #     be hashed
-        mines = [ tuple(mine) for mine in mines ]
+        mines = [tuple(mine) for mine in mines]
         mines = set(mines)
-        self.assertEquals(len(mines),25)
-
-
-
+        self.assertEquals(len(mines), 25)
