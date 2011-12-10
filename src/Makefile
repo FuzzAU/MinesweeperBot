@@ -18,4 +18,4 @@ lint:
 	pep8 .
 
 test:
-	nose .
+	nosetests .
