@@ -1,5 +1,6 @@
 from MineBot import *
 
+
 def main():
     testMinePlacer.test()
 

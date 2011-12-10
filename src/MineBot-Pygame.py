@@ -1,3 +1,3 @@
 from MineBot import *
 
-MineWindow.start( 640, 640 )
+MineWindow.start(640, 640)
