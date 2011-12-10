@@ -2,7 +2,7 @@ import unittest
 from MineBot import *
 
 
-class MinePlacementTests( object ):
+class MinePlacementTests(object):
 
     def testPlacement(self):
         cells = MinePlacer.generateList(5, 5)
