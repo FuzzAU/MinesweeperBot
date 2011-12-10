@@ -1,7 +1,10 @@
 import sys
-import pygame
-from pygame.locals import *
 
+try:
+    import pygame
+    from pygame.locals import *
+except:
+    print 'Pygame not installed'
 
 # Amount of margin to usei (1 = 100%)
 windowMargin = 0.1
