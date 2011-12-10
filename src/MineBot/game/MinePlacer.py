@@ -41,7 +41,8 @@ def placeMines(mineGrid, numberOfMines):
     Place random mines inside the mine grid provided
     """
     xSize = len(mineGrid)
-    ySize = len(mineGrid[0]) # No better way to do this without better grid structure
+    # No better way to do this without better grid structure
+    ySize = len(mineGrid[0])
 
     cellList = generateList(xSize, ySize)
     mineList = getRandomMines(cellList, numberOfMines)
@@ -49,5 +50,3 @@ def placeMines(mineGrid, numberOfMines):
     for mine in mineList:
         cell = mineGrid[mine[0]][mine[1]]
         cell.hasMine = True
-
-
