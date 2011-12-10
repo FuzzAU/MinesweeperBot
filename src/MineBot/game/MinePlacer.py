@@ -14,7 +14,7 @@ def printCellList( cellList ):
         print cell
     
 # Will generate random mine locations from the provided list of cells
-def placeMines( cellList, numberOfMines ):
+def getRandomMines( cellList, numberOfMines ):
     mineLocations = []
     cellListCopy = cellList
     
@@ -23,3 +23,15 @@ def placeMines( cellList, numberOfMines ):
         mineLocations.append( cellListCopy.pop( randIndex ) )
     
     return mineLocations
+
+# Place random mines inside the mine grid provided
+def placeMines( mineGrid, numberOfMines ):
+    xSize = len( mineGrid )
+    ySize = len( mineGrid[0] ) # Andrew: is there a better way of doing this?
+
+    cellList = generateList( xSize, ySize )
+    mineList = getRandomMines( cellList, numberOfMines )
+
+    for mine in mineList:
+        cell = mineGrid[ mine[0] ][ mine[1] ]
+        cell.hasMine = True
