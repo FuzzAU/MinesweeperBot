@@ -1,3 +1,7 @@
+.PHONY: install
+.PHONY: depends
+.PHONY: lint
+.PHONY: test
 
 # This makefile contains a whole bunch of shortcuts and scripted
 # Things that are convenient to not have to remember
@@ -12,3 +16,6 @@ depends:
 
 lint:
 	pep8 .
+
+test:
+	nose .
