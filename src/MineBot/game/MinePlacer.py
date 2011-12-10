@@ -1,20 +1,29 @@
 import random
 
-# Generate a list of all cells in a grid of sizeX by sizeY
 def generateList( sizeX, sizeY ):
+    """
+    Generate a list of all cells in a grid of sizeX by sizeY
+    """
     cellList = []
     for x in range( 0, sizeX ):
         for y in range( 0, sizeY ):
             cellList.append( [ x,y ] )
     return cellList
     
-# For debugging, print a list of all cells in the provided list
+
 def printCellList( cellList ):
+    """
+    Prints a list of cells
+
+    For debugging, print a list of all cells in the provided list
+    """
     for cell in cellList:
         print cell
-    
-# Will generate random mine locations from the provided list of cells
+
 def getRandomMines( cellList, numberOfMines ):
+    """
+    Will generate random mine locations from the provided list of cells
+    """
     mineLocations = []
     cellListCopy = cellList
     
@@ -24,8 +33,10 @@ def getRandomMines( cellList, numberOfMines ):
     
     return mineLocations
 
-# Place random mines inside the mine grid provided
 def placeMines( mineGrid, numberOfMines ):
+    """
+    Place random mines inside the mine grid provided
+    """
     xSize = len( mineGrid )
     ySize = len( mineGrid[0] ) # Andrew: is there a better way of doing this?
 
