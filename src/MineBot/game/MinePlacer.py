@@ -1,4 +1,5 @@
 import random
+import copy
 
 
 def generateList(sizeX, sizeY):
@@ -26,9 +27,10 @@ def getRandomMines(cellList, numberOfMines):
     """
     Will generate random mine locations from the provided list of cells
     """
+    # TODO - JY to consider `random.shuffle` and list slicing
     mineLocations = []
-    cellListCopy = cellList
-    for mineNum in xrange(numberOfMines):
+    cellListCopy = copy.deepcopy(cellList)
+    for mineNum in xrange(min(numberOfMines, len(cellList))):
         randIndex = random.randint(0, len(cellListCopy) - 1)
         mineLocations.append(cellListCopy.pop(randIndex))
     return mineLocations
@@ -39,7 +41,7 @@ def placeMines(mineGrid, numberOfMines):
     Place random mines inside the mine grid provided
     """
     xSize = len(mineGrid)
-    ySize = len(mineGrid[0]) # Andrew: is there a better way of doing this?
+    ySize = len(mineGrid[0]) # No better way to do this without better grid structure
 
     cellList = generateList(xSize, ySize)
     mineList = getRandomMines(cellList, numberOfMines)
@@ -47,3 +49,5 @@ def placeMines(mineGrid, numberOfMines):
     for mine in mineList:
         cell = mineGrid[mine[0]][mine[1]]
         cell.hasMine = True
+
+
