@@ -1,4 +1,4 @@
-import CellInfo 
+from .CellInfo import CellInfo
 import MinePlacer
 import sys
 
@@ -7,9 +7,7 @@ class MineGame(object):
     mineGrid = []
 
     def InitGame( self, xSize, ySize, numberOfMines ):
-        # Andrew: How do i make it so i dont have to type CellInfo.CellInfo
-        # I want to import all of the module's contents
-        self.mineGrid = [ [ CellInfo.CellInfo() ] * ySize for x in xrange( xSize ) ]
+        self.mineGrid = [ [ CellInfo() ] * ySize for x in xrange( xSize ) ]
 
         MinePlacer.placeMines( self.mineGrid, numberOfMines )
 
