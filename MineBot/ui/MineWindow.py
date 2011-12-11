@@ -12,6 +12,7 @@ BLACK_COLOUR = pygame.Color(0, 0, 0)
 WHITE_COLOR = pygame.Color(255, 255, 255)
 BACKGROUND_COLOR = WHITE_COLOR
 
+
 def start(x_resolution, y_resolution):
     pygame.init()
     fpsClock = pygame.time.Clock()
@@ -29,7 +30,8 @@ def start(x_resolution, y_resolution):
     field_bound_box = (x_margin, y_margin, xClip, yClip)
 
     # Calculate where the lines need to be drawn
-    lines = calculate_cell_lines((x_resolution, y_resolution), field_bound_box, 5, 5)
+    lines = calculate_cell_lines((x_resolution, y_resolution),
+                                 field_bound_box, 5, 5)
 
     # Main loop for pygame
     while True:
