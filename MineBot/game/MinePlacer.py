@@ -2,51 +2,51 @@ import random
 import copy
 
 
-def generateList(sizeX, sizeY):
+def generate_list(size_x, size_y):
     """
     Generate a list of all cells in a grid of sizeX by sizeY
     """
-    cellList = []
-    for x in range(0, sizeX):
-        for y in range(0, sizeY):
-            cellList.append([x, y])
-    return cellList
+    cell_list = []
+    for x in range(0, size_x):
+        for y in range(0, size_y):
+            cell_list.append([x, y])
+    return cell_list
 
 
-def printCellList(cellList):
+def print_cell_list(cell_list):
     """
     Prints a list of cells
 
     For debugging, print a list of all cells in the provided list
     """
-    for cell in cellList:
+    for cell in cell_list:
         print cell
 
 
-def getRandomMines(cellList, numberOfMines):
+def get_random_mines(cell_list, mine_count):
     """
     Will generate random mine locations from the provided list of cells
     """
     # TODO - JY to consider `random.shuffle` and list slicing
-    mineLocations = []
-    cellListCopy = copy.deepcopy(cellList)
-    for mineNum in xrange(min(numberOfMines, len(cellList))):
-        randIndex = random.randint(0, len(cellListCopy) - 1)
-        mineLocations.append(cellListCopy.pop(randIndex))
-    return mineLocations
+    mine_locations = []
+    cell_list_copy = copy.deepcopy(cell_list)
+    for mineNum in xrange(min(mine_count, len(cell_list))):
+        rand_index = random.randint(0, len(cell_list_copy) - 1)
+        mine_locations.append(cell_list_copy.pop(rand_index))
+    return mine_locations
 
 
-def placeMines(mineGrid, numberOfMines):
+def place_mines(mine_grid, mine_count):
     """
     Place random mines inside the mine grid provided
     """
-    xSize = len(mineGrid)
+    x_size = len(mine_grid)
     # No better way to do this without better grid structure
-    ySize = len(mineGrid[0])
+    y_size = len(mine_grid[0])
 
-    cellList = generateList(xSize, ySize)
-    mineList = getRandomMines(cellList, numberOfMines)
+    cell_list = generate_list(x_size, y_size)
+    mine_list = get_random_mines(cell_list, mine_count)
 
-    for mine in mineList:
-        cell = mineGrid[mine[0]][mine[1]]
-        cell.hasMine = True
+    for mine in mine_list:
+        cell = mine_grid[mine[0]][mine[1]]
+        cell.has_mine = True

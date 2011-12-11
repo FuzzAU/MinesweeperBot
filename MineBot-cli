@@ -4,17 +4,17 @@ from MineBot import *
 
 if(len(sys.argv) == 4):
     try:
-        xFieldSize = int(sys.argv[1])
-        yFieldSize = int(sys.argv[2])
-        numMines = int(sys.argv[3])
+        x_field_size = int(sys.argv[1])
+        y_field_size = int(sys.argv[2])
+        mine_count = int(sys.argv[3])
     except:
         print 'Run as ./MineBot-cli <FieldSizeX> <FieldSizeY> <NumMines>'
         sys.exit()
 else:
-    xFieldSize = 9
-    yFieldSize = 9
-    numMines = 10
+    x_field_size = 9
+    y_field_size = 9
+    mine_count = 10
 
 game = MineGame.MineGame()
-game.InitGame(xFieldSize, yFieldSize, numMines)
-game.DisplayGrid()
+game.init_game(x_field_size, y_field_size, mine_count)
+game.display_grid()
