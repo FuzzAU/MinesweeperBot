@@ -36,9 +36,8 @@ class MinePygame(object):
         # Calculate the size of the cells in X & Y dimensions
         # To make them square, the X dimension will match the Y-dimension
         self.y_cell_size = int(self.field_bound_box[3] / self.y_cell_count)
-        self.x_cell_size = self.y_cell_size
+        self.x_cell_size = int(self.field_bound_box[2] / self.x_cell_count)
         
-        # Calculate grid corner locations, for convenience 
         self.grid_top = self.field_bound_box[1]
         self.grid_bottom = self.grid_top + self.field_bound_box[3]
         self.grid_left = self.field_bound_box[0]
@@ -68,9 +67,9 @@ class MinePygame(object):
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
-#                elif event.type == MOUSEBUTTONUP:
-#                    selected_cell = determine_cell_clicked( event.pos )
-#                    print 'Clicked cell: ' + str(selected_cell)
+                elif event.type == MOUSEBUTTONUP:
+                    selected_cell = self.determine_cell_clicked( event.pos )
+                    print 'Clicked cell: ' + str(selected_cell)
 
             pygame.display.update()
             fpsClock.tick(30)
@@ -94,5 +93,16 @@ class MinePygame(object):
 
         return cell_lines
 
-#    def determine_cell_clicked( self, click_position ):
-    
+    def determine_cell_clicked( self, click_position ):
+        # Make sure the click was inside the grid
+        if (click_position[0] < self.grid_left) | (click_position[0] > self.grid_right):
+            grid_clicked = -1
+        elif (click_position[1] < self.grid_top) | (click_position[1] > self.grid_bottom):
+            grid_clicked = -1
+        else:
+          # Offset the clicked position back to the origin and divide the the cell sizes to find
+          # which grid was clicked
+          offset_location = (click_position[0] - self.grid_left, click_position[1] - self.grid_top)     
+          grid_clicked = (offset_location[0] // self.x_cell_size, offset_location[1] // self.y_cell_size)
+
+        return grid_clicked
