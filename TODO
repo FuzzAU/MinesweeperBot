@@ -1,0 +1,15 @@
+TODO
+----
+
+Mine Placement - JY:
+Newer implementations of minesweeper actually move mines away from the initial starting position that
+the user has selected.
+
+This can be done by delaying the mine placement until the user does their first selection, and then
+removing the clicked square and adjacents from the allowed squares for mine placement
+
+OR
+
+By waiting for the user to make their selection, and just move those mines away near the clicked point.
+
+It is possible for there to not be enough locations to move mines to in some circumstances
