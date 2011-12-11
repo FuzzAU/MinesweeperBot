@@ -22,7 +22,6 @@ def print_cell_list(cell_list):
     for cell in cell_list:
         print cell
 
-
 def get_random_mines(cell_list, mine_count):
     """
     Will generate random mine locations from the provided list of cells
