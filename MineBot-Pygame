@@ -2,4 +2,5 @@
 from MineBot import *
 from MineBot.ui import *
 
-MineWindow.start(640, 640)
+game = MinePygame.MinePygame( 640, 480, 10, 10, 25 )
+game.start()

@@ -1,1 +1,1 @@
-import MineWindow
+import MinePygame
