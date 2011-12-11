@@ -38,4 +38,3 @@ class MinePlacementTests(unittest.TestCase):
         mines = [tuple(mine) for mine in mines]
         mines = set(mines)
         self.assertEquals(len(mines), 25)
-
