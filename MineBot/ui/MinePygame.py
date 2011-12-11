@@ -12,15 +12,17 @@ BLACK_COLOUR = pygame.Color(0, 0, 0)
 WHITE_COLOR = pygame.Color(255, 255, 255)
 BACKGROUND_COLOR = WHITE_COLOR
 
+
 class MinePygame(object):
-    def __init__(self, x_resolution, y_resolution, x_cell_count, y_cell_count, mine_count):
+    def __init__(self, x_resolution, y_resolution,
+                 x_cell_count, y_cell_count, mine_count):
         # Store resolution, cell count and mine count
         self.x_resolution = x_resolution
         self.y_resolution = y_resolution
         self.x_cell_count = x_cell_count
         self.y_cell_count = y_cell_count
         self.mine_count = mine_count
-        
+
         # Create a blank pygame canvas
         self.window = pygame.display.set_mode((x_resolution, y_resolution))
 
@@ -31,18 +33,18 @@ class MinePygame(object):
         # Calculate where the field is going to be drawn
         self.x_clip = self.x_resolution - (2 * self.x_margin)
         self.y_clip = self.y_resolution - (2 * self.y_margin)
-        self.field_bound_box = (self.x_margin, self.y_margin, self.x_clip, self.y_clip)
+        self.field_bound_box = (self.x_margin, self.y_margin,
+                                self.x_clip, self.y_clip)
 
         # Calculate the size of the cells in X & Y dimensions
         # To make them square, the X dimension will match the Y-dimension
         self.y_cell_size = int(self.field_bound_box[3] / self.y_cell_count)
         self.x_cell_size = int(self.field_bound_box[2] / self.x_cell_count)
-        
+
         self.grid_top = self.field_bound_box[1]
         self.grid_bottom = self.grid_top + self.field_bound_box[3]
         self.grid_left = self.field_bound_box[0]
         self.grid_right = self.grid_left + self.field_bound_box[2]
-
 
     def start(self):
         pygame.init()
@@ -52,13 +54,14 @@ class MinePygame(object):
         pygame.display.set_caption('Minesweeper Bot')
 
         # Calculate where the lines need to be drawn
-        lines = self.calculate_cell_lines();
+        lines = self.calculate_cell_lines()
 
         # Main loop for pygame
         while True:
             self.window.fill(BACKGROUND_COLOR)
 
-            pygame.draw.rect(self.window, BLACK_COLOUR, self.field_bound_box, 3)
+            pygame.draw.rect(self.window, BLACK_COLOUR,
+                             self.field_bound_box, 3)
 
             for l in lines:
                 pygame.draw.line(self.window, BLACK_COLOUR, l[0], l[1], 3)
@@ -68,12 +71,11 @@ class MinePygame(object):
                     pygame.quit()
                     sys.exit()
                 elif event.type == MOUSEBUTTONUP:
-                    selected_cell = self.determine_cell_clicked( event.pos )
+                    selected_cell = self.determine_cell_clicked(event.pos)
                     print 'Clicked cell: ' + str(selected_cell)
 
             pygame.display.update()
             fpsClock.tick(30)
-
 
     def calculate_cell_lines(self):
         """
@@ -93,16 +95,20 @@ class MinePygame(object):
 
         return cell_lines
 
-    def determine_cell_clicked( self, click_position ):
+    def determine_cell_clicked(self, click_position):
         # Make sure the click was inside the grid
-        if (click_position[0] < self.grid_left) | (click_position[0] > self.grid_right):
+        if (click_position[0] < self.grid_left)\
+            | (click_position[0] > self.grid_right):
             grid_clicked = -1
-        elif (click_position[1] < self.grid_top) | (click_position[1] > self.grid_bottom):
+        elif (click_position[1] < self.grid_top) |\
+            (click_position[1] > self.grid_bottom):
             grid_clicked = -1
         else:
-          # Offset the clicked position back to the origin and divide the the cell sizes to find
-          # which grid was clicked
-          offset_location = (click_position[0] - self.grid_left, click_position[1] - self.grid_top)     
-          grid_clicked = (offset_location[0] // self.x_cell_size, offset_location[1] // self.y_cell_size)
+            # Offset the clicked position back to the origin and divide
+            # divide the cell sizes to find which grid was clicked
+            offset_location = (click_position[0] - self.grid_left,
+                             click_position[1] - self.grid_top)
+            grid_clicked = (offset_location[0] // self.x_cell_size,
+                            offset_location[1] // self.y_cell_size)
 
         return grid_clicked
