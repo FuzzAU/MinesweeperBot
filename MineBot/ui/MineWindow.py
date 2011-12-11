@@ -7,71 +7,73 @@ except:
     print 'Pygame not installed'
 
 # Amount of margin to usei (1 = 100%)
-windowMargin = 0.1
-black = pygame.Color(0, 0, 0)
-white = pygame.Color(255, 255, 255)
-bgColor = white
+WINDOW_MARGIN = 0.1
+BLACK_COLOUR = pygame.Color(0, 0, 0)
+WHITE_COLOR = pygame.Color(255, 255, 255)
+BACKGROUND_COLOR = WHITE_COLOR
 
-
-def start(xResolution, yResolution):
+def start(x_resolution, y_resolution):
     pygame.init()
     fpsClock = pygame.time.Clock()
 
     # Set up the window
-    window = pygame.display.set_mode((xResolution, yResolution))
+    window = pygame.display.set_mode((x_resolution, y_resolution))
     pygame.display.set_caption('Minesweeper Bot')
 
-    xMargin = int(windowMargin * float(xResolution))
-    yMargin = int(windowMargin * float(yResolution))
+    x_margin = int(WINDOW_MARGIN * float(x_resolution))
+    y_margin = int(WINDOW_MARGIN * float(y_resolution))
 
     # Calculate where the field is going to be drawn
-    xClip = xResolution - (2 * xMargin)
-    yClip = yResolution - (2 * yMargin)
-    fieldBoundBox = (xMargin, yMargin, xClip, yClip)
+    xClip = x_resolution - (2 * x_margin)
+    yClip = y_resolution - (2 * y_margin)
+    field_bound_box = (x_margin, y_margin, xClip, yClip)
 
     # Calculate where the lines need to be drawn
-    lines = calculateCellLines((xResolution, yResolution), fieldBoundBox, 5, 5)
+    lines = calculate_cell_lines((x_resolution, y_resolution), field_bound_box, 5, 5)
 
     # Main loop for pygame
     while True:
-        window.fill(bgColor)
+        window.fill(BACKGROUND_COLOR)
 
-        pygame.draw.rect(window, black, fieldBoundBox, 3)
+        pygame.draw.rect(window, BLACK_COLOUR, field_bound_box, 3)
 
         for l in lines:
-            pygame.draw.line(window, black, l[0], l[1], 3)
+            pygame.draw.line(window, BLACK_COLOUR, l[0], l[1], 3)
 
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
+            #elif event.type == MOUSEBUTTONUP:
+            #    selected_cell = determine_cell_clicked( event.pos )
+            #    print 'Clicked cell: ' + str(selected_cell)
 
         pygame.display.update()
         fpsClock.tick(30)
 
 
-def calculateCellLines(resolution, boundBox, xCellCount, yCellCount):
+def calculate_cell_lines(resolution, bound_box, x_cell_count, y_cell_count):
     """
     Calculates where the cell lines need to be drawn
     """
 
-    cellLines = []
+    cell_lines = []
 
-    xCellSize = int(boundBox[2] / xCellCount)
-    yCellSize = int(boundBox[3] / yCellCount)
+    x_cell_size = int(bound_box[2] / x_cell_count)
+    y_cell_size = int(bound_box[3] / y_cell_count)
 
-    top = boundBox[1]
-    bottom = top + boundBox[3]
-    left = boundBox[0]
-    right = left + boundBox[2]
+    top = bound_box[1]
+    bottom = top + bound_box[3]
+    left = bound_box[0]
+    right = left + bound_box[2]
 
     # Y lines go from the top of the bound box, to the bottom
-    for yCell in range(1, xCellCount):
-        xL = left + yCell * xCellSize
-        cellLines.append(((xL, top), (xL, bottom)))
+    for yCell in range(1, x_cell_count):
+        xL = left + yCell * x_cell_size
+        cell_lines.append(((xL, top), (xL, bottom)))
 
-    for xCell in range(1, yCellCount):
-        yL = top + xCell * yCellSize
-        cellLines.append(((left, yL), (right, yL)))
+    for xCell in range(1, y_cell_count):
+        yL = top + xCell * y_cell_size
+        cell_lines.append(((left, yL), (right, yL)))
 
-    return cellLines
+    return cell_lines
