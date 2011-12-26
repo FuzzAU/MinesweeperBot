@@ -9,8 +9,8 @@ class MinePlacementTests(unittest.TestCase):
         # Make sure we get the right number back
         self.assertEquals(len(cells), 25)
         # Choose a couple of random samples, and make sure they are right
-        self.assertEquals(cells[0], [0, 0])
-        self.assertEquals(cells[-1], [4, 4])
+        self.assertEquals(cells[0], (0, 0))
+        self.assertEquals(cells[-1], (4, 4))
 
     def test_no_random_mines(self):
         cells = MinePlacer.generate_list(5, 5)

@@ -1,15 +1,16 @@
 import random
 import copy
-
+import numpy
 
 def generate_list(size_x, size_y):
     """
     Generate a list of all cells in a grid of sizeX by sizeY
     """
-    cell_list = []
-    for x in range(0, size_x):
-        for y in range(0, size_y):
-            cell_list.append([x, y])
+#    cell_list = []
+#    for x in range(0, size_x):
+#        for y in range(0, size_y):
+#            cell_list.append([x, y])
+    cell_list = [(x, y) for x in xrange(size_x) for y in xrange(size_y)];
     return cell_list
 
 
@@ -28,12 +29,10 @@ def get_random_mines(cell_list, mine_count):
     Will generate random mine locations from the provided list of cells
     """
     # TODO - JY to consider `random.shuffle` and list slicing
-    mine_locations = []
     cell_list_copy = copy.deepcopy(cell_list)
-    for mineNum in xrange(min(mine_count, len(cell_list))):
-        rand_index = random.randint(0, len(cell_list_copy) - 1)
-        mine_locations.append(cell_list_copy.pop(rand_index))
-    return mine_locations
+
+    numpy.random.shuffle(cell_list_copy)
+    return cell_list_copy[:mine_count]
 
 
 def place_mines(mine_grid, mine_count):
