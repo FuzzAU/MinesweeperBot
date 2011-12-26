@@ -36,9 +36,7 @@ class MineGrid(object):
         """
         for loc in self.flat_indexes: 
             adj = adjacent_cells(self.size, loc)
-            print adj
             x = sum(self[i].has_mine for i in adj)
-            print x
             self[loc]._adjacent_mines = sum(self[i].has_mine for i in adj)
 
     def display_grid(self):
