@@ -19,9 +19,6 @@ class MineGame(object):
         return res
 
     def init_game(self, x_size, y_size, mine_count):
-        # TODO - JY to remove following line after experimenting with
-        #        MineGameTests.testCellInfoUniqueness
-        #self.mineGrid = [[CellInfo()] * ySize for x in xrange(xSize)]
         for j in xrange(y_size):
             row = []
             for i in xrange(x_size):
