@@ -15,12 +15,11 @@ class PlayerCellInfo(object):
         """
         Returns the number of adjacent mines to this cell
         If this is a hidden cell, the the number zero will be returned
-        """    
+        """
         if(self.is_hidden == True):
             return 0
         else:
             return self._adjacent_mines
-        
 
     def get_char(self):
         """

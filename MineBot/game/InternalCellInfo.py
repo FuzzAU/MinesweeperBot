@@ -1,5 +1,6 @@
 from .PlayerCellInfo import PlayerCellInfo
 
+
 class InternalCellInfo(PlayerCellInfo):
 
     def __init__(self):

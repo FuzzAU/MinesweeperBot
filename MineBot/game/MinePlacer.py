@@ -2,6 +2,7 @@ import random
 import copy
 import numpy
 
+
 def get_random_mines(cell_list, mine_count):
     """
     Will generate random mine locations from the provided list of cells

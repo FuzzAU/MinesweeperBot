@@ -1,4 +1,5 @@
 
+
 def adjacent_cells(size, location):
     """
     Get adjacent sell indexes for a given cell on the Minesweeper grid
@@ -12,4 +13,3 @@ def adjacent_cells(size, location):
             if nx >= 0 and nx < size[0] and ny >= 0 and ny < size[1]:
                 res.append((nx, ny))
     return res
-

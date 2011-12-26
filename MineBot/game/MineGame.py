@@ -1,11 +1,11 @@
-from .InternalCellInfo import InternalCellInfo 
+from .InternalCellInfo import InternalCellInfo
 from .MineGrid import MineGrid
-from .MinePlacer import * 
+from .MinePlacer import *
 import sys
 
 
 class MineGame(object):
-    
+
     def init_game(self, x_size, y_size, mine_count):
         self._grid = MineGrid(x_size, y_size)
         grid = self._grid
