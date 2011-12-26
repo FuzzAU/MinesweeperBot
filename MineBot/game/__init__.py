@@ -1,3 +1,5 @@
 import MinePlacer
-import CellInfo
+import InternalCellInfo
+import PlayerCellInfo 
 import MineGame
+import MineGrid

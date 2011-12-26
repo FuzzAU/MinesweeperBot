@@ -1,10 +1,13 @@
+from .PlayerCellInfo import PlayerCellInfo
 
-
-class CellInfo(object):
+class InternalCellInfo(PlayerCellInfo):
 
     def __init__(self):
         self.has_mine = False
-        self.surrounding_mines = 0
+        PlayerCellInfo.__init__(self)
+
+    def get_adjacent_mines(self):
+        return self._adjacent_mines
 
     def get_char(self):
         """
@@ -14,5 +17,5 @@ class CellInfo(object):
         if self.has_mine == True:
             cell_char = 'X'
         else:
-            cell_char = str(self.surrounding_mines)
+            cell_char = str(self._adjacent_mines)
         return cell_char

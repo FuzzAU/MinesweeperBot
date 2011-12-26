@@ -1,4 +1,4 @@
-from .CellInfo import CellInfo
+from .InternalCellInfo import InternalCellInfo 
 import MinePlacer
 import sys
 
@@ -22,7 +22,7 @@ class MineGame(object):
         for j in xrange(y_size):
             row = []
             for i in xrange(x_size):
-                row.append(CellInfo())
+                row.append(InternalCellInfo())
             self.mine_grid.append(row)
 
         MinePlacer.place_mines(self.mine_grid, mine_count)
