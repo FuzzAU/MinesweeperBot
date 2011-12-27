@@ -7,7 +7,7 @@ class InternalCellInfo(PlayerCellInfo):
         self.has_mine = False
         PlayerCellInfo.__init__(self)
 
-    def get_adjacent_mines(self):
+    def count_adjacent_mines(self):
         return self._adjacent_mines
 
     def get_char(self):

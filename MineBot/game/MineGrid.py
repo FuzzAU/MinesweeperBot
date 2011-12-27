@@ -44,9 +44,8 @@ class MineGrid(object):
         Updates the adjacent mine fields of each cell after mines are placed
         """
         for loc in self.flat_indexes:
-            adj = adjacent_cells(self.size, loc)
-            x = sum(self[i].has_mine for i in adj)
-            self[loc]._adjacent_mines = sum(self[i].has_mine for i in adj)
+            adj = adjacent_cells(self, loc)
+            self[loc]._adjacent_mines = sum(cell.has_mine for cell in adj)
 
     def display_grid(self):
         for line in self._mine_grid:

@@ -11,7 +11,7 @@ class PlayerCellInfo(object):
         self._adjacent_mines = 0
         self.is_flagged = False
 
-    def get_adjacent_mines(self):
+    def count_adjacent_mines(self):
         """
         Returns the number of adjacent mines to this cell
         If this is a hidden cell, the the number zero will be returned

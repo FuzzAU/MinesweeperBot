@@ -33,7 +33,7 @@ class MineGame(object):
         # Take away the first location from the list usable for mine placement
         grid_indexes.remove(first_location)
         # Take away all adjacement cells
-        for cell in adjacent_cells(self._grid.size, first_location):
+        for cell in adjacent_indexes(self._grid.size, first_location):
             grid_indexes.remove(cell)
 
         # Get some random mines to put in to the grid
@@ -57,10 +57,13 @@ class MineGame(object):
 
     def display_grid_state(self):
         state = self.get_grid_state()
+        sys.stdout.write('\n')
         for line in state:
             for cell in line:
                 sys.stdout.write(cell + ' ')
             sys.stdout.write('\n')
+
+        sys.stdout.write('\n')
 
     def unhide_cell(self, location):
         """
@@ -69,12 +72,40 @@ class MineGame(object):
         # If this is our first click, then populate the grid
         if self.populated == False:
             self.populate_grid(location)
-        
-        self._grid[location].is_hidden = False
-        
-        if self._grid[location].has_mine == True:
+       
+        cell = self._grid[location]
+        # Unhide the selected cell
+        cell.is_hidden = False
+       
+        # If this cell was a mine, the game is lost
+        if cell.has_mine == True:
             self.state = GameState.LOST
-    
+        # If the cell has 0 surrounding mines, auto-unhide the surrounding mines
+        elif cell.count_adjacent_mines() == 0:
+            self.auto_unhide(location)
+
+    def auto_unhide(self, location):
+        """
+        Automatically unhide all cells around a cell marked
+        with 0 surrounding mines
+        """
+        unhide_list = [location]
+        while len(unhide_list) > 0:
+            cell = unhide_list.pop()
+            self._grid[cell].is_hidden = False
+
+            for cell_ind in adjacent_indexes(self._grid.size, cell):
+                # If one oef the cells we try and unhide is also zero
+                # then push it to the list to have its neighbours
+                # unhidden too
+                adj_cell = self._grid[cell_ind]
+                if adj_cell.count_adjacent_mines() == 0:
+                    if adj_cell.is_hidden == True:
+                        unhide_list.append(cell_ind)
+
+                # Unhide this, and all surrounding cells
+                adj_cell.is_hidden = False
+
     def toggle_flag_cell(self, location):
         """
         Toggle the flagged state of a cell
