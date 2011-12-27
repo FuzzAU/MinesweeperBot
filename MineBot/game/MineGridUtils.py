@@ -1,8 +1,8 @@
 
 
-def adjacent_cells(size, location):
+def adjacent_indexes(size, location):
     """
-    Get adjacent sell indexes for a given cell on the Minesweeper grid
+    Get adjacent cell indexes for a given cell on the Minesweeper grid
     Based heavily on Andrew Walker's adjacent cells function from gist-1459561
     """
     res = []
@@ -15,4 +15,14 @@ def adjacent_cells(size, location):
             ny = location[1] + j
             if nx >= 0 and nx < size[0] and ny >= 0 and ny < size[1]:
                 res.append((nx, ny))
+    return res
+
+def adjacent_cells(grid, location):
+    """
+    Get all of the actual cell objects in the grid that are adjacent to the location
+    provided
+    """
+    adj_cells = adjacent_indexes(grid.size, location)
+    res = [grid[x] for x in adj_cells]
+    
     return res
