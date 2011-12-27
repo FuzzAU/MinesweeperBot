@@ -79,10 +79,33 @@ class MinePygame(object):
                     sys.exit()
                 elif event.type == MOUSEBUTTONUP:
                     selected_cell = self.determine_cell_clicked(event.pos)
-                    print 'Clicked cell: ' + str(selected_cell)
+                    # If this is a left click, we want to unhide the mine
+                    if event.button == 1:
+                        self.handle_unhide_cell(selected_cell)
+                    # For right clicks we want to flag the mine, or unflag it
+                    elif event.button == 3:
+                        self.handle_flag_cell(selected_cell)
+
+                    self.game.display_grid_state()
 
             pygame.display.update()
             fpsClock.tick(30)
+
+    def handle_unhide_cell(self, selected_cell):
+        if selected_cell == -1:
+            return
+        # Get the underlying game engine to unhide the cell
+        self.game.unhide_cell(selected_cell)
+
+        state = self.game.get_grid_state()
+
+#        if game.get_game_state
+
+    def handle_flag_cell(self, selected_cell):
+        if selected_cell == -1:
+            return
+
+        self.game.toggle_flag_cell(selected_cell)
 
     def calculate_cell_lines(self):
         """

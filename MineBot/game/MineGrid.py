@@ -21,7 +21,14 @@ class MineGrid(object):
             self._mine_grid.append(row)
 
     def __getitem__(self, location):
-        return self._mine_grid[location[0]][location[1]]
+        """
+        Access a specific location in the grid
+
+        We want to access as (x,y)
+        The first index in our grid is actually the row, and is hence y
+        so we access as (location[1], location[0])
+        """
+        return self._mine_grid[location[1]][location[0]]
 
     def place_mines(self, mine_list):
         """
