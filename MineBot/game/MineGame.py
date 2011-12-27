@@ -1,6 +1,7 @@
 from .InternalCellInfo import InternalCellInfo
 from .MineGrid import MineGrid
 from .MinePlacer import *
+from .MineGridUtils import *
 import sys
 
 class GameState:
@@ -13,14 +14,36 @@ class MineGame(object):
 
     def __init__(self):
         self.state = GameState.PLAYING
+        self.populated = False
 
     def init_game(self, x_size, y_size, mine_count):
         self._grid = MineGrid(x_size, y_size)
         grid = self._grid
+        self.mine_count = mine_count
+
+    def populate_grid(self, first_location):
+        """
+        We want to populate the grid with mines, but
+        not allow a mine to be in the first selected cell,
+        or any adjacent cells
+        This is a common way to start in modern minesweeper games
+        """
+        grid_indexes = list(self._grid.flat_indexes)
+        
+        # Take away the first location from the list usable for mine placement
+        grid_indexes.remove(first_location)
+        # Take away all adjacement cells
+        for cell in adjacent_cells(self._grid.size, first_location):
+            grid_indexes.remove(cell)
 
         # Get some random mines to put in to the grid
-        mineList = get_random_mines(grid.flat_indexes, mine_count)
-        grid.place_mines(mineList)
+        mineList = get_random_mines(grid_indexes, self.mine_count)
+   
+        self._grid.place_mines(mineList)
+
+        self.populated = True
+   
+        self._grid.display_grid()
 
     def get_game_state(self):
         return self.state
@@ -43,7 +66,10 @@ class MineGame(object):
         """
         Unhide a cell selected by the player
         """
-        print location
+        # If this is our first click, then populate the grid
+        if self.populated == False:
+            self.populate_grid(location)
+        
         self._grid[location].is_hidden = False
         
         if self._grid[location].has_mine == True:
