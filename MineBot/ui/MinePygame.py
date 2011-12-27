@@ -1,4 +1,6 @@
 import sys
+from ..game import *
+from ..game.MineGame import MineGame
 
 try:
     import pygame
@@ -16,6 +18,11 @@ BACKGROUND_COLOR = WHITE_COLOR
 class MinePygame(object):
     def __init__(self, x_resolution, y_resolution,
                  x_cell_count, y_cell_count, mine_count):
+
+        # Initiate a MineGame
+        self.game = MineGame()
+        self.game.init_game(x_cell_count, y_cell_count, mine_count)
+
         # Store resolution, cell count and mine count
         self.x_resolution = x_resolution
         self.y_resolution = y_resolution

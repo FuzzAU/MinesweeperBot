@@ -18,3 +18,5 @@ else:
 game = MineGame.MineGame()
 game.init_game(x_field_size, y_field_size, mine_count)
 game.display_grid()
+state = game.get_game_state()
+game.display_game_state()

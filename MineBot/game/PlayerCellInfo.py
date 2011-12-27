@@ -21,13 +21,18 @@ class PlayerCellInfo(object):
         else:
             return self._adjacent_mines
 
-    def get_char(self):
+    def get_game_char(self):
         """
         Get an ASCII character representation of this cell
         """
         cell_char = '0'
         if self.is_flagged == True:
             cell_char = 'F'
+        elif self.is_hidden == True:
+            cell_char = '-'
+        # Only show a mine when it is not hidden and unflagged.
+        elif self.has_mine == True:     
+            cell_char = 'X'
         else:
             cell_char = str(self._adjacent_mines)
         return cell_char
