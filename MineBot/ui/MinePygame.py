@@ -14,6 +14,7 @@ WINDOW_MARGIN = 0.05
 CELL_GAP_FACTOR = 0.1
 BLACK_COLOR = pygame.Color(0, 0, 0)
 WHITE_COLOR = pygame.Color(255, 255, 255)
+BLUE_COLOR = pygame.Color(0,255,0)
 CELL_COLOR = pygame.Color(255,0,0)
 BACKGROUND_COLOR = BLACK_COLOR
 
@@ -57,22 +58,26 @@ class MinePygame(object):
         square_size_x = ( (1 - WINDOW_MARGIN) * self.x_resolution) / (self.x_cell_count + CELL_GAP_FACTOR*(self.x_cell_count - 1))
         square_size_y = ( (1 - WINDOW_MARGIN) * self.y_resolution) / (self.y_cell_count + CELL_GAP_FACTOR*(self.y_cell_count - 1))
 
-        print 'square_size_x: ' + str(square_size_x)
-        print 'square_size_y: ' + str(square_size_y)
-
         # The square cell size will be the smallest so that it will fit in the screen
         if square_size_x <= square_size_y:
-            square_size = square_size_x
+            square_size = int(square_size_x)
         else:
-            square_size = square_size_y
+            square_size = int(square_size_y)
         self.square_size = square_size
+        self.gap_size = CELL_GAP_FACTOR * square_size
 
         # Calculate the size of the field to be drawn with the new square sizes
-        display_size_x = self.x_cell_count * square_size + 0.1 * square_size * (self.x_cell_count - 1)
-        display_size_y = self.y_cell_count * square_size + 0.1 * square_size * (self.y_cell_count - 1)
+        display_size_x = self.x_cell_count * square_size + self.gap_size * (self.x_cell_count - 1)
+        display_size_y = self.y_cell_count * square_size + self.gap_size * (self.y_cell_count - 1)
 
         self.start_loc_x = (self.x_resolution - display_size_x) / 2
         self.start_loc_y = (self.y_resolution - display_size_y) / 2
+
+        self.grid_left = self.start_loc_x
+        self.grid_right = self.start_loc_x + display_size_x
+        self.grid_top = self.start_loc_y
+        self.grid_bottom = self.start_loc_y + display_size_y
+
 
     def start(self):
         pygame.init()
@@ -83,11 +88,13 @@ class MinePygame(object):
 
         # Main loop for pygame
         while True:
+            grid_state = self.game.get_grid_state()
+
             self.window.fill(BACKGROUND_COLOR)
 
-            self.draw_cells()
+            self.draw_cells(grid_state)
             self.window.blit(self.surface, (0,0))
-            pygame.display.flip()
+#            pygame.display.flip()
 
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -110,15 +117,27 @@ class MinePygame(object):
             pygame.display.update()
             fpsClock.tick(30)
 
-    def draw_cells(self):
+    def draw_cells(self, grid_status):
         cell_loc = [self.start_loc_x, self.start_loc_y]
         rect = [cell_loc[0], cell_loc[1], self.square_size, self.square_size]
         
+        draw_color = CELL_COLOR
+
         for x in xrange(0, self.x_cell_count):
             for y in xrange(0, self.y_cell_count):
-                self.surface.fill(CELL_COLOR, rect)
+                # If the cell contains a zero, dont draw anything
+                if grid_status[y][x] == '0':
+                    draw_color = BLACK_COLOR
+                # Draw flagged cells as clue
+                elif grid_status[y][x] == 'F':
+                    draw_color = BLUE_COLOR
+                else:
+                    draw_color = CELL_COLOR
+                # Perform the surface drawing
+                self.surface.fill(draw_color, rect)
+                # Move the rectanges start location in Y forward
                 rect[1] += (1 + CELL_GAP_FACTOR) * self.square_size
-            
+            # Reset y start location and increment x location 
             rect[1] = cell_loc[1]
             rect[0] += (1 + CELL_GAP_FACTOR) * self.square_size
 
@@ -149,9 +168,9 @@ class MinePygame(object):
         else:
             # Offset the clicked position back to the origin and divide
             # divide the cell sizes to find which grid was clicked
-            offset_location = (click_position[0] - self.grid_left,
-                             click_position[1] - self.grid_top)
-            grid_clicked = (offset_location[0] // self.x_cell_size,
-                            offset_location[1] // self.y_cell_size)
-
+            offset_location = (click_position[0] - self.grid_left + (self.gap_size // 2),
+                             click_position[1] - self.grid_top + (self.gap_size // 2))
+            grid_clicked = (int(offset_location[0] // (self.square_size + self.gap_size)),
+                            int(offset_location[1] // (self.square_size + self.gap_size)))
+            print grid_clicked
         return grid_clicked
