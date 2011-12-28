@@ -84,6 +84,21 @@ class MineGame(object):
         elif cell.count_adjacent_mines() == 0:
             self.auto_unhide(location)
 
+    def check_for_win(self):
+        """
+        Check to see if the game is in a winning state
+
+        A winning state is when all the non-mine cells are unhidden
+        """
+        grid = self._grid
+        # When the number of cells still flagged is == number of mines, this is a win 
+        still_flagged = sum( [grid[(x,y)].is_hidden for x in xrange(0, grid.size[0]) for y in xrange(0,grid.size[1])] )
+        
+        if still_flagged == self.mine_count:
+            return true
+        else:
+            return false
+
     def auto_unhide(self, location):
         """
         Automatically unhide all cells around a cell marked

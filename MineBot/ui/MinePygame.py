@@ -1,6 +1,7 @@
 import sys
 from ..game import *
 from ..game.MineGame import MineGame
+from ..game.MineGame import *
 
 try:
     import pygame
@@ -8,11 +9,13 @@ try:
 except:
     print 'Pygame not installed'
 
-# Amount of margin to usei (1 = 100%)
-WINDOW_MARGIN = 0.1
-BLACK_COLOUR = pygame.Color(0, 0, 0)
+# Factor of window to use as margin (on each side)
+WINDOW_MARGIN = 0.05
+CELL_GAP_FACTOR = 0.1
+BLACK_COLOR = pygame.Color(0, 0, 0)
 WHITE_COLOR = pygame.Color(255, 255, 255)
-BACKGROUND_COLOR = WHITE_COLOR
+CELL_COLOR = pygame.Color(255,0,0)
+BACKGROUND_COLOR = BLACK_COLOR
 
 
 class MinePygame(object):
@@ -32,26 +35,44 @@ class MinePygame(object):
 
         # Create a blank pygame canvas
         self.window = pygame.display.set_mode((x_resolution, y_resolution))
+        self.surface = pygame.Surface(self.window.get_size())
+        self.surface.convert()
 
-        # Calculate the margin widths
-        self.x_margin = int(WINDOW_MARGIN * float(x_resolution))
-        self.y_margin = int(WINDOW_MARGIN * float(y_resolution))
+        # We want the screen to be divided up as follows
+        #  n x squares
+        #  n-1 x gaps between squares (of 10% square width)
+        #  5% of screen width to be used as margin
+        #
+        #  Let: 
+        #    n be mine count in a certain dimension
+        #    cs be cell size
+        #    res be the screen resolution in a certain dimension
+        #
+        #  Therefore
+        #  res = n.cs + (n-1).0.1.cs + 0.05.res
+        #
+        # We want all cells to be squares, so lets find the dimension
+        # that allows us to fit everything in using squares
+        # depending on the resolution and cell size in each dimension
+        square_size_x = ( (1 - WINDOW_MARGIN) * self.x_resolution) / (self.x_cell_count + CELL_GAP_FACTOR*(self.x_cell_count - 1))
+        square_size_y = ( (1 - WINDOW_MARGIN) * self.y_resolution) / (self.y_cell_count + CELL_GAP_FACTOR*(self.y_cell_count - 1))
 
-        # Calculate where the field is going to be drawn
-        self.x_clip = self.x_resolution - (2 * self.x_margin)
-        self.y_clip = self.y_resolution - (2 * self.y_margin)
-        self.field_bound_box = (self.x_margin, self.y_margin,
-                                self.x_clip, self.y_clip)
+        print 'square_size_x: ' + str(square_size_x)
+        print 'square_size_y: ' + str(square_size_y)
 
-        # Calculate the size of the cells in X & Y dimensions
-        # To make them square, the X dimension will match the Y-dimension
-        self.y_cell_size = int(self.field_bound_box[3] / self.y_cell_count)
-        self.x_cell_size = int(self.field_bound_box[2] / self.x_cell_count)
+        # The square cell size will be the smallest so that it will fit in the screen
+        if square_size_x <= square_size_y:
+            square_size = square_size_x
+        else:
+            square_size = square_size_y
+        self.square_size = square_size
 
-        self.grid_top = self.field_bound_box[1]
-        self.grid_bottom = self.grid_top + self.field_bound_box[3]
-        self.grid_left = self.field_bound_box[0]
-        self.grid_right = self.grid_left + self.field_bound_box[2]
+        # Calculate the size of the field to be drawn with the new square sizes
+        display_size_x = self.x_cell_count * square_size + 0.1 * square_size * (self.x_cell_count - 1)
+        display_size_y = self.y_cell_count * square_size + 0.1 * square_size * (self.y_cell_count - 1)
+
+        self.start_loc_x = (self.x_resolution - display_size_x) / 2
+        self.start_loc_y = (self.y_resolution - display_size_y) / 2
 
     def start(self):
         pygame.init()
@@ -60,18 +81,13 @@ class MinePygame(object):
         # Set up the window
         pygame.display.set_caption('Minesweeper Bot')
 
-        # Calculate where the lines need to be drawn
-        lines = self.calculate_cell_lines()
-
         # Main loop for pygame
         while True:
             self.window.fill(BACKGROUND_COLOR)
 
-            pygame.draw.rect(self.window, BLACK_COLOUR,
-                             self.field_bound_box, 3)
-
-            for l in lines:
-                pygame.draw.line(self.window, BLACK_COLOUR, l[0], l[1], 3)
+            self.draw_cells()
+            self.window.blit(self.surface, (0,0))
+            pygame.display.flip()
 
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -87,9 +103,24 @@ class MinePygame(object):
                         self.handle_flag_cell(selected_cell)
 
                     self.game.display_grid_state()
+                    
+                    if(self.game.get_game_state() == GameState.LOST):
+                        print 'You lost'
 
             pygame.display.update()
             fpsClock.tick(30)
+
+    def draw_cells(self):
+        cell_loc = [self.start_loc_x, self.start_loc_y]
+        rect = [cell_loc[0], cell_loc[1], self.square_size, self.square_size]
+        
+        for x in xrange(0, self.x_cell_count):
+            for y in xrange(0, self.y_cell_count):
+                self.surface.fill(CELL_COLOR, rect)
+                rect[1] += (1 + CELL_GAP_FACTOR) * self.square_size
+            
+            rect[1] = cell_loc[1]
+            rect[0] += (1 + CELL_GAP_FACTOR) * self.square_size
 
     def handle_unhide_cell(self, selected_cell):
         if selected_cell == -1:
@@ -106,24 +137,6 @@ class MinePygame(object):
             return
 
         self.game.toggle_flag_cell(selected_cell)
-
-    def calculate_cell_lines(self):
-        """
-        Calculates where the cell lines need to be drawn
-        """
-
-        cell_lines = []
-
-        # Y lines go from the top of the bound box, to the bottom
-        for y_cell in range(1, self.x_cell_count):
-            xL = self.grid_left + y_cell * self.x_cell_size
-            cell_lines.append(((xL, self.grid_top), (xL, self.grid_bottom)))
-
-        for x_cell in range(1, self.y_cell_count):
-            yL = self.grid_top + x_cell * self.y_cell_size
-            cell_lines.append(((self.grid_left, yL), (self.grid_right, yL)))
-
-        return cell_lines
 
     def determine_cell_clicked(self, click_position):
         # Make sure the click was inside the grid
