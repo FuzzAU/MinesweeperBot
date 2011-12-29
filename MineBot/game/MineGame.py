@@ -3,7 +3,7 @@ from .MineGrid import MineGrid
 from .MinePlacer import *
 from .MineGridUtils import *
 import sys
-
+from copy import copy
 
 class GameState:
     WON = 1
@@ -17,10 +17,17 @@ class MineGame(object):
         self.state = GameState.PLAYING
         self.populated = False
 
+        # Keep a list of unopened cells (to assist in speedy auto-evaluation)
+        self.unopened_cells = []
+        # Keep a list of opened cells, that are non-zero (to assist in speed auto-evaluation)
+        self.opened_cells = []
+
     def init_game(self, x_size, y_size, mine_count):
         self._grid = MineGrid(x_size, y_size)
-        grid = self._grid
         self.mine_count = mine_count
+
+        # The list of unopened cells will initially be all possible cells
+        self.unopened_cells = copy(self._grid.flat_indexes) 
 
     def populate_grid(self, first_location):
         """
@@ -39,12 +46,10 @@ class MineGame(object):
 
         # Get some random mines to put in to the grid
         mineList = get_random_mines(grid_indexes, self.mine_count)
-
+        # Place the mines
         self._grid.place_mines(mineList)
-
+        # Mark the grid as populated
         self.populated = True
-
-        self._grid.display_grid()
 
     def get_game_state(self):
         return self.state
@@ -77,19 +82,34 @@ class MineGame(object):
         cell = self._grid[location]
         # Unhide the selected cell
         cell.is_hidden = False
+        
+        # When this mine is unhidden, remove it from the unopened cells list
+        try:
+            self.unopened_cells.remove(location)
+        except ValueError:
+            pass
+
         cell.is_flagged = False 
 
         # If this cell was a mine, the game is lost
         if cell.has_mine == True:
             self.state = GameState.LOST
+
         # If the cell has 0 surrounding mines, auto-unhide the
         # surrounding mines
         elif cell.count_adjacent_mines() == 0:
             self.auto_unhide(location)
+        else:
+            # This cell was opened, so print out the opened cells
+            print 'adding cell ' + str(location) + ' with adj: ' + str(cell.count_adjacent_mines())
+            self.opened_cells.append(location)
 
         win = self.check_for_win()
         if win == True:
             self.state = GameState.WON
+
+        print 'unop: ' + str(self.unopened_cells)
+        print 'op: ' + str(self.opened_cells)
 
     def check_for_win(self):
         """
@@ -124,9 +144,18 @@ class MineGame(object):
                 # then push it to the list to have its neighbours
                 # unhidden too
                 adj_cell = self._grid[cell_ind]
-                if adj_cell.count_adjacent_mines() == 0:
-                    if adj_cell.is_hidden == True:
-                        unhide_list.append(cell_ind)
+                try:
+                    self.unopened_cells.remove(cell_ind)
+                except ValueError:
+                    pass
+
+                if (adj_cell.count_adjacent_mines() == 0)\
+                   & (adj_cell.is_hidden == True):
+                    unhide_list.append(cell_ind)
+                elif (adj_cell.count_adjacent_mines() != 0)\
+                   & (adj_cell.is_hidden == True):
+                    print 'Xadding cell ' + str(cell_ind) + ' with adj: ' + str(adj_cell.count_adjacent_mines())
+                    self.opened_cells.append(cell_ind)
 
                 # Unhide this, and all surrounding cells
                 adj_cell.is_hidden = False
