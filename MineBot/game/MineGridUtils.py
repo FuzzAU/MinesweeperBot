@@ -8,7 +8,8 @@ def adjacent_indexes(size, location):
     res = []
     for i in [-1, 0, 1]:
         for j in [-1, 0, 1]:
-            # The current cell (middle) should be included in the adjacency list
+            # The current cell (middle) should be included in
+            # the adjacency list
             if (i == 0) & (j == 0):
                 continue
             nx = location[0] + i
@@ -17,12 +18,13 @@ def adjacent_indexes(size, location):
                 res.append((nx, ny))
     return res
 
+
 def adjacent_cells(grid, location):
     """
-    Get all of the actual cell objects in the grid that are adjacent to the location
-    provided
+    Get all of the actual cell objects in the grid that are
+    adjacent to the location provided
     """
     adj_cells = adjacent_indexes(grid.size, location)
     res = [grid[x] for x in adj_cells]
-    
+
     return res

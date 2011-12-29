@@ -31,7 +31,7 @@ class PlayerCellInfo(object):
         elif self.is_hidden == True:
             cell_char = '-'
         # Only show a mine when it is not hidden and unflagged.
-        elif self.has_mine == True:     
+        elif self.has_mine == True:
             cell_char = 'X'
         else:
             cell_char = str(self._adjacent_mines)

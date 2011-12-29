@@ -4,10 +4,11 @@ from .MinePlacer import *
 from .MineGridUtils import *
 import sys
 
+
 class GameState:
-    WON=1
-    PLAYING=2
-    LOST=3
+    WON = 1
+    PLAYING = 2
+    LOST = 3
 
 
 class MineGame(object):
@@ -29,7 +30,7 @@ class MineGame(object):
         This is a common way to start in modern minesweeper games
         """
         grid_indexes = list(self._grid.flat_indexes)
-        
+
         # Take away the first location from the list usable for mine placement
         grid_indexes.remove(first_location)
         # Take away all adjacement cells
@@ -38,11 +39,11 @@ class MineGame(object):
 
         # Get some random mines to put in to the grid
         mineList = get_random_mines(grid_indexes, self.mine_count)
-   
+
         self._grid.place_mines(mineList)
 
         self.populated = True
-   
+
         self._grid.display_grid()
 
     def get_game_state(self):
@@ -50,7 +51,7 @@ class MineGame(object):
 
     def get_grid_state(self):
         size = self._grid.size
-        state = [[0 for i in range(size[0])] for j in range(size[1])] 
+        state = [[0 for i in range(size[0])] for j in range(size[1])]
         for loc in self._grid.flat_indexes:
             state[loc[1]][loc[0]] = self._grid[loc].get_game_char()
         return state
@@ -72,15 +73,16 @@ class MineGame(object):
         # If this is our first click, then populate the grid
         if self.populated == False:
             self.populate_grid(location)
-       
+
         cell = self._grid[location]
         # Unhide the selected cell
         cell.is_hidden = False
-       
+
         # If this cell was a mine, the game is lost
         if cell.has_mine == True:
             self.state = GameState.LOST
-        # If the cell has 0 surrounding mines, auto-unhide the surrounding mines
+        # If the cell has 0 surrounding mines, auto-unhide the
+        # surrounding mines
         elif cell.count_adjacent_mines() == 0:
             self.auto_unhide(location)
 
@@ -91,9 +93,12 @@ class MineGame(object):
         A winning state is when all the non-mine cells are unhidden
         """
         grid = self._grid
-        # When the number of cells still flagged is == number of mines, this is a win 
-        still_flagged = sum( [grid[(x,y)].is_hidden for x in xrange(0, grid.size[0]) for y in xrange(0,grid.size[1])] )
-        
+        # When the number of cells still flagged is == number
+        # of mines, this is a win
+        still_flagged = sum([grid[(x, y)].is_hidden for x in\
+                            xrange(0, grid.size[0]) for y in\
+                            xrange(0, grid.size[1])])
+
         if still_flagged == self.mine_count:
             return true
         else:
@@ -144,7 +149,7 @@ class MineGame(object):
         """
         Flag a cell that is suspected of having a mine
         """
-        self._grid[location].is_flagged = False 
+        self._grid[location].is_flagged = False
 
     def display_grid(self):
         self._grid.display_grid()
