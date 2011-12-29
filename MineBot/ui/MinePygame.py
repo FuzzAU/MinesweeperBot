@@ -78,6 +78,24 @@ class MinePygame(object):
         self.grid_top = self.start_loc_y
         self.grid_bottom = self.start_loc_y + display_size_y
 
+        # Using the square size as the font, render numbers on surface
+        # for blitting when needed
+        font_surfaces = []
+        pygame.font.init()
+        default_font = pygame.font.get_default_font()
+        drawing_font = pygame.font.Font(default_font, square_size)
+        font_surfaces.append(0)
+        for i in xrange(1, 9):
+            font_surfaces.append(drawing_font.render(str(i), True, CELL_COLOR, BLACK_COLOR))
+
+        self.font_surfaces = font_surfaces
+
+        # Work out drawing offset from corner of box to draw a font surface
+        # Assuming (As they seem to be) that all numbers in the font are drawn on the same
+        # size surface
+        num_surf_size = font_surfaces[1].get_size()
+        self.num_draw_offset = ( (square_size - num_surf_size[0]) // 2, (square_size-num_surf_size[1]) // 2)
+
 
     def start(self):
         pygame.init()
@@ -118,7 +136,7 @@ class MinePygame(object):
             fpsClock.tick(30)
 
     def draw_cells(self, grid_status):
-        cell_loc = [self.start_loc_x, self.start_loc_y]
+        cell_loc = [int(self.start_loc_x), int(self.start_loc_y)]
         rect = [cell_loc[0], cell_loc[1], self.square_size, self.square_size]
         
         draw_color = CELL_COLOR
@@ -128,18 +146,32 @@ class MinePygame(object):
                 # If the cell contains a zero, dont draw anything
                 if grid_status[y][x] == '0':
                     draw_color = BLACK_COLOR
+                    # Perform the surface drawing
+                    self.surface.fill(draw_color, rect)
                 # Draw flagged cells as clue
                 elif grid_status[y][x] == 'F':
                     draw_color = BLUE_COLOR
-                else:
+                     # Perform the surface drawing
+                    self.surface.fill(draw_color, rect)
+                elif grid_status[y][x] == 'X':
+                    draw_color = pygame.Color(255,255,0)
+                    self.surface.fill(draw_color, rect)
+                # The mine is still hidden, draw it as a square
+                elif grid_status[y][x] == '-':
                     draw_color = CELL_COLOR
-                # Perform the surface drawing
-                self.surface.fill(draw_color, rect)
+                    # Perform the surface drawing
+                    self.surface.fill(draw_color, rect)
+                # It must be a number, draw it as such
+                else:
+                    draw_color = BLACK_COLOR
+                    self.surface.fill(draw_color, rect)
+                    self.surface.blit(self.font_surfaces[int(grid_status[y][x])], (rect[0]+self.num_draw_offset[0], rect[1]+self.num_draw_offset[1]))
+                    
                 # Move the rectanges start location in Y forward
-                rect[1] += (1 + CELL_GAP_FACTOR) * self.square_size
+                rect[1] += int((1 + CELL_GAP_FACTOR) * self.square_size)
             # Reset y start location and increment x location 
             rect[1] = cell_loc[1]
-            rect[0] += (1 + CELL_GAP_FACTOR) * self.square_size
+            rect[0] += int((1 + CELL_GAP_FACTOR) * self.square_size)
 
     def handle_unhide_cell(self, selected_cell):
         if selected_cell == -1:
