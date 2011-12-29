@@ -2,6 +2,7 @@ import sys
 from ..game import *
 from ..game.MineGame import MineGame
 from ..game.MineGame import *
+from ..bot.MineBot import MineBot
 
 try:
     import pygame
@@ -26,6 +27,9 @@ class MinePygame(object):
         # Initiate a MineGame
         self.game = MineGame()
         self.game.init_game(x_cell_count, y_cell_count, mine_count)
+
+        # Initate an auto-playing MineBot
+        self.bot = MineBot(self.game)
 
         # Store resolution, cell count and mine count
         self.x_resolution = x_resolution
@@ -157,7 +161,15 @@ class MinePygame(object):
                         print 'You lost'
                     if(self.game.get_game_state() == GameState.WON):
                         print 'You won, idiot'
-                            
+                elif event.type == KEYDOWN:
+                    if event.key == K_a:
+                        f = self.bot.auto_flag()
+                        print 'Auto-flagged ' + str(f) + ' mines'
+                    elif event.key == K_c:
+                        c = self.bot.auto_clear()
+                        print 'Auto-cleared ' + str(c) + ' cells'
+                    elif event.key == K_s:
+                        self.bot.auto_step()
 
             pygame.display.update()
             fpsClock.tick(30)

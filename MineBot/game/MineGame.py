@@ -101,15 +101,11 @@ class MineGame(object):
             self.auto_unhide(location)
         else:
             # This cell was opened, so print out the opened cells
-            print 'adding cell ' + str(location) + ' with adj: ' + str(cell.count_adjacent_mines())
             self.opened_cells.append(location)
 
         win = self.check_for_win()
         if win == True:
             self.state = GameState.WON
-
-        print 'unop: ' + str(self.unopened_cells)
-        print 'op: ' + str(self.opened_cells)
 
     def check_for_win(self):
         """
@@ -154,7 +150,6 @@ class MineGame(object):
                     unhide_list.append(cell_ind)
                 elif (adj_cell.count_adjacent_mines() != 0)\
                    & (adj_cell.is_hidden == True):
-                    print 'Xadding cell ' + str(cell_ind) + ' with adj: ' + str(adj_cell.count_adjacent_mines())
                     self.opened_cells.append(cell_ind)
 
                 # Unhide this, and all surrounding cells
