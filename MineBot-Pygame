@@ -2,5 +2,5 @@
 from MineBot import *
 from MineBot.ui import *
 
-game = MinePygame.MinePygame(800, 600, 25, 25, 10)
+game = MinePygame.MinePygame(800, 600, 9, 9, 10)
 game.start()

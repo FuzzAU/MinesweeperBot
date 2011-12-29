@@ -91,10 +91,21 @@ class MinePygame(object):
         pygame.font.init()
         default_font = pygame.font.get_default_font()
         drawing_font = pygame.font.Font(default_font, square_size)
+        
+        num_colors = [pygame.Color(255, 122, 122),
+                      pygame.Color(128, 255, 0),
+                      pygame.Color(0, 0, 255),
+                      pygame.Color(255, 255, 0),
+                      pygame.Color(255, 128, 0),
+                      pygame.Color(128, 0, 255),
+                      pygame.Color(255, 0, 128),
+                      pygame.Color(255, 61, 61)
+                      ]
+        
         font_surfaces.append(0)
         for i in xrange(1, 9):
             font_surfaces.append(drawing_font.render(str(i), True,\
-                                                     CELL_COLOR, BLACK_COLOR))
+                                                     num_colors[i-1], BLACK_COLOR))
 
         self.font_surfaces = font_surfaces
 
@@ -114,20 +125,25 @@ class MinePygame(object):
 
         # Main loop for pygame
         while True:
+            # Grab the latest state of game
             grid_state = self.game.get_grid_state()
-
+            game_state = self.game.get_game_state()
+            
             self.window.fill(BACKGROUND_COLOR)
 
+            # Draw the cells to a surface, and blit it on to the window
             self.draw_cells(grid_state)
             self.window.blit(self.surface, (0, 0))
-#            pygame.display.flip()
 
+            # Handle events
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
                 elif event.type == MOUSEBUTTONUP:
+                    #
                     selected_cell = self.determine_cell_clicked(event.pos)
+
                     # If this is a left click, we want to unhide the mine
                     if event.button == 1:
                         self.handle_unhide_cell(selected_cell)
@@ -136,9 +152,12 @@ class MinePygame(object):
                         self.handle_flag_cell(selected_cell)
 
                     self.game.display_grid_state()
-
+                    
                     if(self.game.get_game_state() == GameState.LOST):
                         print 'You lost'
+                    if(self.game.get_game_state() == GameState.WON):
+                        print 'You won, idiot'
+                            
 
             pygame.display.update()
             fpsClock.tick(30)

@@ -77,6 +77,7 @@ class MineGame(object):
         cell = self._grid[location]
         # Unhide the selected cell
         cell.is_hidden = False
+        cell.is_flagged = False 
 
         # If this cell was a mine, the game is lost
         if cell.has_mine == True:
@@ -85,6 +86,10 @@ class MineGame(object):
         # surrounding mines
         elif cell.count_adjacent_mines() == 0:
             self.auto_unhide(location)
+
+        win = self.check_for_win()
+        if win == True:
+            self.state = GameState.WON
 
     def check_for_win(self):
         """
@@ -100,9 +105,9 @@ class MineGame(object):
                             xrange(0, grid.size[1])])
 
         if still_flagged == self.mine_count:
-            return true
+            return True
         else:
-            return false
+            return False
 
     def auto_unhide(self, location):
         """
