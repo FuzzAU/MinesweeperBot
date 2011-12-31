@@ -5,7 +5,7 @@ from .MineGridUtils import *
 import sys
 from copy import copy
 
-class GameState:
+class GameState(object):
     WON = 1
     PLAYING = 2
     LOST = 3
