@@ -10,7 +10,7 @@ def adjacent_indexes(size, location):
         for j in [-1, 0, 1]:
             # The current cell (middle) should be included in
             # the adjacency list
-            if (i == 0) & (j == 0):
+            if (i == 0) and (j == 0):
                 continue
             nx = location[0] + i
             ny = location[1] + j

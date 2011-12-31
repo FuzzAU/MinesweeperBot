@@ -146,10 +146,10 @@ class MineGame(object):
                     pass
 
                 if (adj_cell.count_adjacent_mines() == 0)\
-                   & (adj_cell.is_hidden == True):
+                   and (adj_cell.is_hidden == True):
                     unhide_list.append(cell_ind)
                 elif (adj_cell.count_adjacent_mines() != 0)\
-                   & (adj_cell.is_hidden == True):
+                   and (adj_cell.is_hidden == True):
                     self.opened_cells.append(cell_ind)
 
                 # Unhide this, and all surrounding cells

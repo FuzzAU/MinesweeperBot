@@ -45,7 +45,7 @@ class MineBot(object):
             # If they do match, then flag each of the unflagged cells
             if hidden_adj == cell.count_adjacent_mines():
                 for adj_cell in adj:
-                    if (adj_cell.is_hidden == True) & (adj_cell.is_flagged == False):
+                    if (adj_cell.is_hidden == True) and (adj_cell.is_flagged == False):
                         adj_cell.is_flagged = True
                         flagged += 1
 
@@ -74,7 +74,7 @@ class MineBot(object):
             if flagged_adj == cell.count_adjacent_mines():
                 for adj in adj_indexes:
                     adj_cell = grid[adj]
-                    if (adj_cell.is_hidden == True) &\
+                    if (adj_cell.is_hidden == True) and\
                        (adj_cell.is_flagged == False):
                         game.unhide_cell(adj)
                         cleared += 1
