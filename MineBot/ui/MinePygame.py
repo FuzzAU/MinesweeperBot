@@ -9,6 +9,7 @@ try:
     from pygame.locals import *
 except:
     print 'Pygame not installed'
+    sys.exit(1)
 
 # Factor of window to use as margin (on each side)
 WINDOW_MARGIN = 0.05
