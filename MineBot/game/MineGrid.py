@@ -37,9 +37,9 @@ class MineGrid(object):
         for cell in [self[x] for x in mine_list]:
             cell.has_mine = True
 
-        self.__update_adjacency__()
+        self._update_adjacency()
 
-    def __update_adjacency__(self):
+    def _update_adjacency(self):
         """
         Updates the adjacent mine fields of each cell after mines are placed
         """
