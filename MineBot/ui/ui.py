@@ -1,8 +1,8 @@
 import sys
 from ..game import *
-from ..game.MineGame import MineGame
-from ..game.MineGame import *
-from ..bot.MineBot import MineBot
+from ..game.game import MineGame
+from ..game.game import *
+from ..bot.bot import MineBot
 
 try:
     import pygame

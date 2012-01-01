@@ -1,5 +1,5 @@
-from .InternalCellInfo import InternalCellInfo
-from .MineGridUtils import *
+from .cellinfo import InternalCellInfo
+from .gridutils import *
 import sys
 
 

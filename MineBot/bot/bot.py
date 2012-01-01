@@ -1,5 +1,5 @@
 import sys
-from ..game.MineGridUtils import *
+from ..game.gridutils import *
 
 class MineBot(object):
     """

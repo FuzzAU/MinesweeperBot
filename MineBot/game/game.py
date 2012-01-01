@@ -1,7 +1,7 @@
-from .InternalCellInfo import InternalCellInfo
-from .MineGrid import MineGrid
-from .MinePlacer import *
-from .MineGridUtils import *
+from .cellinfo import InternalCellInfo
+from .grid import MineGrid
+from .mineplacer import *
+from .gridutils import *
 import sys
 from copy import copy
 

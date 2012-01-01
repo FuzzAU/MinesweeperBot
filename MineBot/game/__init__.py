@@ -1,5 +1,4 @@
-import MinePlacer
-import InternalCellInfo
-import PlayerCellInfo
-import MineGame
-import MineGrid
+import mineplacer
+import cellinfo
+import game
+import grid
