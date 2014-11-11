@@ -17,6 +17,6 @@ class MineGameTests(unittest.TestCase):
         game.init_game(5, 5, 10)
 
         # Make sure we actually gave 10 mines in there
-        mines = sum(cell.has_mine == True for cell in game.cells())
+        mines = sum(cell.has_mine for cell in game.cells())
 
         self.assertEquals(mines, 10)

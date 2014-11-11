@@ -5,6 +5,7 @@ from .gridutils import *
 import sys
 from copy import copy
 
+
 class GameState(object):
     WON = 1
     PLAYING = 2
@@ -19,7 +20,8 @@ class MineGame(object):
 
         # Keep a list of unopened cells (to assist in speedy auto-evaluation)
         self.unopened_cells = []
-        # Keep a list of opened cells, that are non-zero (to assist in speed auto-evaluation)
+        # Keep a list of opened cells, that are non-zero (to assist in speed
+        # auto-evaluation)
         self.opened_cells = []
 
     def init_game(self, x_size, y_size, mine_count):
@@ -27,7 +29,7 @@ class MineGame(object):
         self.mine_count = mine_count
 
         # The list of unopened cells will initially be all possible cells
-        self.unopened_cells = copy(self._grid.flat_indexes) 
+        self.unopened_cells = copy(self._grid.flat_indexes)
 
     def populate_grid(self, first_location):
         """
@@ -76,23 +78,23 @@ class MineGame(object):
         Unhide a cell selected by the player
         """
         # If this is our first click, then populate the grid
-        if self.populated == False:
+        if self.populated is False:
             self.populate_grid(location)
 
         cell = self._grid[location]
         # Unhide the selected cell
         cell.is_hidden = False
-        
+
         # When this mine is unhidden, remove it from the unopened cells list
         try:
             self.unopened_cells.remove(location)
         except ValueError:
             pass
 
-        cell.is_flagged = False 
+        cell.is_flagged = False
 
         # If this cell was a mine, the game is lost
-        if cell.has_mine == True:
+        if cell.has_mine:
             self.state = GameState.LOST
 
         # If the cell has 0 surrounding mines, auto-unhide the
@@ -103,8 +105,7 @@ class MineGame(object):
             # This cell was opened, so print out the opened cells
             self.opened_cells.append(location)
 
-        win = self.check_for_win()
-        if win == True:
+        if self.check_for_win():
             self.state = GameState.WON
 
     def check_for_win(self):
@@ -116,8 +117,8 @@ class MineGame(object):
         grid = self._grid
         # When the number of cells still flagged is == number
         # of mines, this is a win
-        still_flagged = sum([grid[(x, y)].is_hidden for x in\
-                            xrange(0, grid.size[0]) for y in\
+        still_flagged = sum([grid[(x, y)].is_hidden for x in
+                            xrange(0, grid.size[0]) for y in
                             xrange(0, grid.size[1])])
 
         if still_flagged == self.mine_count:
@@ -146,10 +147,10 @@ class MineGame(object):
                     pass
 
                 if (adj_cell.count_adjacent_mines() == 0)\
-                   and (adj_cell.is_hidden == True):
+                   and (adj_cell.is_hidden):
                     unhide_list.append(cell_ind)
-                elif (adj_cell.count_adjacent_mines() != 0)\
-                   and (adj_cell.is_hidden == True):
+                elif (adj_cell.count_adjacent_mines() != 0) and\
+                     (adj_cell.is_hidden):
                     self.opened_cells.append(cell_ind)
 
                 # Unhide this, and all surrounding cells
@@ -163,7 +164,7 @@ class MineGame(object):
         cell.is_flagged = not cell.is_flagged
 
         # If cell is already unhidden, it cannot be flagged
-        if cell.is_hidden == False:
+        if cell.is_hidden is False:
             cell.is_flagged = False
 
     def flag_cell(self, location):
@@ -171,7 +172,7 @@ class MineGame(object):
         Flag a cell that is suspected of having a mine
         """
         # If cell is already unhidden, it cannot be flagged
-        if cell.is_hidden == True:
+        if cell.is_hidden:
             self._grid[location].is_flagged = True
 
     def unflag_cell(self, location):

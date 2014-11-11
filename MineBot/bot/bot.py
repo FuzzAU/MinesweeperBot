@@ -1,6 +1,7 @@
 import sys
 from ..game.gridutils import *
 
+
 class MineBot(object):
     """
     Function to assist with automatically playing minesweeper
@@ -38,17 +39,16 @@ class MineBot(object):
         for cell_ind in game.opened_cells:
             cell = self.game._grid[cell_ind]
             adj = adjacent_cells(self.game._grid, cell_ind)
-                
+
             # Count the number of hidden fields in the adjacent cells
             hidden_adj = sum(adj_cell.is_hidden for adj_cell in adj)
 
             # If they do match, then flag each of the unflagged cells
             if hidden_adj == cell.count_adjacent_mines():
                 for adj_cell in adj:
-                    if (adj_cell.is_hidden == True) and (adj_cell.is_flagged == False):
+                    if adj_cell.is_hidden and (adj_cell.is_flagged is False):
                         adj_cell.is_flagged = True
                         flagged += 1
-
 
         return flagged
 
@@ -74,8 +74,8 @@ class MineBot(object):
             if flagged_adj == cell.count_adjacent_mines():
                 for adj in adj_indexes:
                     adj_cell = grid[adj]
-                    if (adj_cell.is_hidden == True) and\
-                       (adj_cell.is_flagged == False):
+                    if (adj_cell.is_hidden) and\
+                       (adj_cell.is_flagged is False):
                         game.unhide_cell(adj)
                         cleared += 1
         return cleared

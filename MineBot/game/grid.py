@@ -11,8 +11,8 @@ class MineGrid(object):
         """
         self._mine_grid = []
         self.size = (x_size, y_size)
-        self.flat_indexes = [(x, y) for x in xrange(0, x_size)\
-                                   for y in xrange(0, y_size)]
+        self.flat_indexes = [(x, y) for x in xrange(0, x_size)
+                             for y in xrange(0, y_size)]
 
         for j in xrange(y_size):
             row = []

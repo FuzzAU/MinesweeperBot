@@ -16,7 +16,7 @@ class PlayerCellInfo(object):
         Returns the number of adjacent mines to this cell
         If this is a hidden cell, the the number zero will be returned
         """
-        if(self.is_hidden == True):
+        if(self.is_hidden):
             return 0
         else:
             return self._adjacent_mines
@@ -26,12 +26,12 @@ class PlayerCellInfo(object):
         Get an ASCII character representation of this cell
         """
         cell_char = '0'
-        if self.is_flagged == True:
+        if self.is_flagged:
             cell_char = 'F'
-        elif self.is_hidden == True:
+        elif self.is_hidden:
             cell_char = '-'
         # Only show a mine when it is not hidden and unflagged.
-        elif self.has_mine == True:
+        elif self.has_mine:
             cell_char = 'X'
         else:
             cell_char = str(self._adjacent_mines)
@@ -52,7 +52,7 @@ class InternalCellInfo(PlayerCellInfo):
         Get an ASCII character representation of this cell
         """
         cell_char = '0'
-        if self.has_mine == True:
+        if self.has_mine:
             cell_char = 'X'
         else:
             cell_char = str(self._adjacent_mines)
