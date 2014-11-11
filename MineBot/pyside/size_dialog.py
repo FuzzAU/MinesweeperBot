@@ -1,10 +1,14 @@
 from PySide.QtCore import *
 from PySide.QtGui import *
 
-
+# Minimum size of a board is 3 squares
 BOARD_MINIMUM = 3
+# Minimum size of a board is 50 squares
 BOARD_MAXIMUM = 50
+# Start by suggesting a board size of 10 to the user
 BOARD_START_VALUE = 10
+# Number of mines will default to this factor multiplied by the number of square on the board
+MINE_COUNT_FACTOR = 0.15
 
 class SizeDialog(QWidget):
     """ Dialog to ask user what size game they wish to play """
@@ -44,6 +48,15 @@ class SizeDialog(QWidget):
         self.y_size.setValue(BOARD_START_VALUE)
         self.form_layout.addRow('Height:', self.y_size)
 
+        # Create a box so that the user can specify the number of mines on the board
+        self.mine_count = QSpinBox()
+        self.update_mine_count()
+        self.form_layout.addRow('Mines:', self.mine_count)
+
+        # When user changes the size of the board we need to update the mine count
+        self.x_size.valueChanged.connect(self.on_size_changed)
+        self.y_size.valueChanged.connect(self.on_size_changed)
+
         # Add the form layout to base layout
         self.layout.addLayout(self.form_layout)
 
@@ -62,6 +75,23 @@ class SizeDialog(QWidget):
         self.layout.addLayout(self.button_box)
         # Set window layout to the vertical layout
         self.setLayout(self.layout)
+
+    def update_mine_count(self):
+        """ Update the number of mines in the game based on the number of
+            squares on the board
+        """
+        board_squares = self.x_size.value() * self.y_size.value()
+        num_mines = int(board_squares * MINE_COUNT_FACTOR)
+        # Maximum number of mines is the number of squares on the board
+        # Minimum is 1 mine, so there is an actual game
+        self.mine_count.setRange(1, board_squares)
+        self.mine_count.setSingleStep(1)
+        # Set the value of the mines count spin box to the suggested value
+        self.mine_count.setValue(num_mines)
+
+    @Slot()
+    def on_size_changed(self):
+        self.update_mine_count()
 
     @Slot()
     def on_start(self):
