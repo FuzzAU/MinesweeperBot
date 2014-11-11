@@ -1,14 +1,18 @@
 from PySide.QtCore import *
 from PySide.QtGui import *
 
+from game import GameWindow
+
 # Minimum size of a board is 3 squares
 BOARD_MINIMUM = 3
 # Minimum size of a board is 50 squares
 BOARD_MAXIMUM = 50
 # Start by suggesting a board size of 10 to the user
 BOARD_START_VALUE = 10
-# Number of mines will default to this factor multiplied by the number of square on the board
+# Number of mines will default to this factor multiplied by the number
+# of square on the board
 MINE_COUNT_FACTOR = 0.15
+
 
 class SizeDialog(QWidget):
     """ Dialog to ask user what size game they wish to play """
@@ -17,9 +21,12 @@ class SizeDialog(QWidget):
         """ Initialise window and build form components """
 
         QWidget.__init__(self)
+
+        # Create game interface
+        self.game = GameWindow()
         # Store reference to handler that will allow us to request an exit
         self.exit_handler = exit_handler
-        
+
         # Set up window
         self.setWindowTitle('Minesweeper')
         self.setMinimumWidth(300)
@@ -35,7 +42,8 @@ class SizeDialog(QWidget):
         # User form layout for spin boxes as it provides ability to add label
         self.form_layout = QFormLayout()
 
-        # Create spin boxes to represent the size of the minesweeper board that the user wants  
+        # Create spin boxes to represent the size of the minesweeper board
+        # that the user wants
         self.x_size = QSpinBox()
         self.x_size.setRange(BOARD_MINIMUM, BOARD_MAXIMUM)
         self.x_size.setSingleStep(1)
@@ -48,12 +56,14 @@ class SizeDialog(QWidget):
         self.y_size.setValue(BOARD_START_VALUE)
         self.form_layout.addRow('Height:', self.y_size)
 
-        # Create a box so that the user can specify the number of mines on the board
+        # Create a box so that the user can specify the number of
+        # mines on the board
         self.mine_count = QSpinBox()
         self.update_mine_count()
         self.form_layout.addRow('Mines:', self.mine_count)
 
-        # When user changes the size of the board we need to update the mine count
+        # When user changes the size of the board we need to update
+        # the mine count
         self.x_size.valueChanged.connect(self.on_size_changed)
         self.y_size.valueChanged.connect(self.on_size_changed)
 
@@ -71,7 +81,6 @@ class SizeDialog(QWidget):
         self.button_box.addWidget(self.start_button)
         self.button_box.addWidget(self.exit_button)
 
-        
         self.layout.addLayout(self.button_box)
         # Set window layout to the vertical layout
         self.setLayout(self.layout)
@@ -96,7 +105,8 @@ class SizeDialog(QWidget):
     @Slot()
     def on_start(self):
         """ Start a minesweeper game with the parameters given in this form """
-        print 'Start'
+        self.game.show()
+        self.hide()
 
     @Slot()
     def on_exit(self):
