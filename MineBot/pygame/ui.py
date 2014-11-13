@@ -34,7 +34,7 @@ class MinePygame(CommonUI):
         self.surface.convert()
 
         # Precalculate elements and locations of objects to be drawn
-        self.precalculateDrawing()
+        self.precalculate_drawing()
 
         # Using the square size as the font, render numbers on surface
         # for blitting when needed
@@ -55,8 +55,10 @@ class MinePygame(CommonUI):
 
         font_surfaces.append(0)
         for i in xrange(1, 9):
-            font_surfaces.append(drawing_font.render(str(i), True,
-                                 num_colors[i-1], MinePygame.to_pygcolor(CommonUI.BLACK_COLOR)))
+            font_surfaces.append(drawing_font.render(str(i),
+                                 True,
+                                 num_colors[i-1],
+                                 MinePygame.to_pygcolor(CommonUI.BLACK_COLOR)))
 
         self.font_surfaces = font_surfaces
 
@@ -87,7 +89,7 @@ class MinePygame(CommonUI):
             self.window.fill(MinePygame.to_pygcolor(CommonUI.BACKGROUND_COLOR))
 
             # Draw the cells to a surface, and blit it on to the window
-            self.paintGame(self.surface)
+            self.paint_game(self.surface)
             self.window.blit(self.surface, (0, 0))
 
             # Handle events
@@ -124,16 +126,16 @@ class MinePygame(CommonUI):
             pygame.display.update()
             fpsClock.tick(30)
 
-    def drawRect(self, context, rectangle, color):
+    def draw_rect(self, context, rectangle, color):
         context.fill(MinePygame.to_pygcolor(color), rectangle)
 
-    def drawNumber(self, context, rectangle, color, number):
+    def draw_number(self, context, rectangle, color, number):
         # Fill background surface with black first
         context.fill(MinePygame.to_pygcolor(CommonUI.BLACK_COLOR), rectangle)
         context.blit(self.font_surfaces[int(number)],
                      (rectangle[0] + self.num_draw_offset[0],
                      rectangle[1] + self.num_draw_offset[1]))
 
-    def getWindowSize(self):
+    def get_window_size(self):
         width, height = self.window.get_size()
         return [width, height]

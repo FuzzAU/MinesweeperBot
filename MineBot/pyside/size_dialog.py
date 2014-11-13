@@ -116,7 +116,9 @@ class SizeDialog(QWidget):
     @Slot()
     def on_start(self):
         """ Start a minesweeper game with the parameters given in this form """
-        self.game.startGame([self.x_size.value(), self.y_size.value()], self.mine_count.value())
+        self.game.start_game([self.x_size.value(),
+                             self.y_size.value()],
+                             self.mine_count.value())
         self.game.show()
         self.hide()
 

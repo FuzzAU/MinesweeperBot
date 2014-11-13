@@ -18,15 +18,18 @@ class GameWindow(QWidget, CommonUI):
         # Set up window
         self.setWindowTitle('Minesweeper')
         # Set resolution to default size
-        self.resize(CommonUI.DEFAULT_RESOLUTION[0], CommonUI.DEFAULT_RESOLUTION[1])
+        self.resize(CommonUI.DEFAULT_RESOLUTION[0],
+                    CommonUI.DEFAULT_RESOLUTION[1])
         # Set window minimum sizes
         self.setMinimumWidth(CommonUI.MINIMUM_RESOLUTION)
         self.setMinimumHeight(CommonUI.MINIMUM_RESOLUTION)
 
         # ## Set up pens for drawing ###
         # Create drawing pen with no width to allow filling without border
-        self.rect_pen = QPen(GameWindow.toQColor(CommonUI.BACKGROUND_COLOR), 0, Qt.SolidLine)
-        self.text_pen = QPen(GameWindow.toQColor(CommonUI.CELL_COLOR), 0, Qt.SolidLine)
+        self.rect_pen = QPen(GameWindow.to_qcolor(CommonUI.BACKGROUND_COLOR),
+                             0, Qt.SolidLine)
+        self.text_pen = QPen(GameWindow.to_qcolor(CommonUI.CELL_COLOR),
+                             0, Qt.SolidLine)
 
         # Move window to centre of screen (doesn't work well on multi-monitor)
         qr = self.frameGeometry()
@@ -34,7 +37,7 @@ class GameWindow(QWidget, CommonUI):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-    def startGame(self, grid_size, mine_count):
+    def start_game(self, grid_size, mine_count):
         """ Start a new game
 
         Create a new game with the provided grid size and number of mines
@@ -56,19 +59,19 @@ class GameWindow(QWidget, CommonUI):
         p.begin(self)
 
         # Draw black background
-        p.setBrush(GameWindow.toQColor(CommonUI.BACKGROUND_COLOR))
+        p.setBrush(GameWindow.to_qcolor(CommonUI.BACKGROUND_COLOR))
         p.drawRect(0, 0, self.size().width(), self.size().height())
 
         # Paint the game grid
-        self.precalculateDrawing()
-        self.paintGame(p)
+        self.precalculate_drawing()
+        self.paint_game(p)
 
         # Clean up painter
         p.end()
         del p
 
     @staticmethod
-    def toQColor(color):
+    def to_qcolor(color):
         """
         Create a Qt QColor object from a list of RGB components
         :param color: list (of size 3) of RGB components
@@ -77,7 +80,7 @@ class GameWindow(QWidget, CommonUI):
         return QColor(color[0], color[1], color[2])
 
     @staticmethod
-    def toQRect(rect):
+    def to_qrect(rect):
         """
         Create a Qt QRect object from rectangle information
         :param rect: list of rectangle start co-ordinates and size
@@ -85,23 +88,25 @@ class GameWindow(QWidget, CommonUI):
         """
         return QRect(rect[0], rect[1], rect[2], rect[3])
 
-    def drawRect(self, context, rectangle, color):
+    def draw_rect(self, context, rectangle, color):
         context.setPen(self.rect_pen)
-        context.setBrush(GameWindow.toQColor(color))
-        context.drawRect(GameWindow.toQRect(rectangle))
+        context.setBrush(GameWindow.to_qcolor(color))
+        context.drawRect(GameWindow.to_qrect(rectangle))
 
-    def drawNumber(self, context, rectangle, color, number):
+    def draw_number(self, context, rectangle, color, number):
         context.setPen(self.text_pen)
-        context.setBrush(GameWindow.toQColor(color))
-        context.drawText(GameWindow.toQRect(rectangle), Qt.AlignCenter, number)
+        context.setBrush(GameWindow.to_qcolor(color))
+        context.drawText(GameWindow.to_qrect(rectangle),
+                         Qt.AlignCenter, number)
 
-    def getWindowSize(self):
+    def get_window_size(self):
         return [self.size().width(), self.size().height()]
 
     def mousePressEvent(self, event):
         event.accept()
         # Calculate which cell has been selected
-        selected_cell = self.determine_cell_clicked([int(event.x()), int(event.y())])
+        selected_cell = self.determine_cell_clicked([int(event.x()),
+                                                     int(event.y())])
 
         # If this is a left click, we want to unhide the mine
         if event.button() == Qt.LeftButton:
@@ -112,13 +117,15 @@ class GameWindow(QWidget, CommonUI):
 
         # Update painting of window
         self.update()
-        self.checkGameState()
+        self.check_game_state()
 
-    def checkGameState(self):
+    def check_game_state(self):
         # Check if player has lost of won the game
         game_state = self.game.get_game_state()
         if game_state == GameState.WON:
-            QMessageBox.information(self, "Winner", "Congratulations, you won :-)")
+            QMessageBox.information(self,
+                                    "Winner",
+                                    "Congratulations, you won :-)")
             self.hide()
             self.closing.emit()
         elif game_state == GameState.LOST:
@@ -137,9 +144,8 @@ class GameWindow(QWidget, CommonUI):
             self.bot.auto_step()
 
         self.update()
-        self.checkGameState()
+        self.check_game_state()
 
     def closeEvent(self, event):
         """ Close the game window and go back to dialog to show size """
         self.closing.emit()
-
