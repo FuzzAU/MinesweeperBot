@@ -106,6 +106,17 @@ class GameWindow(QWidget, CommonUI):
 
         self.update()
 
+        # Check if player has lost of won the game
+        game_state = self.game.get_game_state()
+        if game_state == GameState.WON:
+            QMessageBox.information(self, "Winner", "Congratulations, you won :-)")
+            self.hide()
+            self.closing.emit()
+        elif game_state == GameState.LOST:
+            QMessageBox.information(self, "Boo", "Too bad, you lost :-(")
+            self.hide()
+            self.closing.emit()
+
     def closeEvent(self, event):
         """ Close the game window and go back to dialog to show size """
         self.closing.emit()
