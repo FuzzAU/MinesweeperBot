@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from MineBot import *
-from MineBot.ui import *
+from MineBot.pygame import *
 
 game = ui.MinePygame(800, 600, 9, 9, 10)
 game.start()
