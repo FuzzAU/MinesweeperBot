@@ -20,4 +20,4 @@ class MinePySide(object):
 
     def exit(self):
         # Request end of qt main loop
-    	self._app.exit()
+        self._app.exit()

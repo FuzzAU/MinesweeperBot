@@ -1,4 +1,3 @@
-from ..game import *
 from ..game.game import *
 from ..bot.bot import MineBot
 from abc import ABCMeta, abstractmethod
@@ -53,21 +52,28 @@ class CommonUI(object):
         raise NotImplementedError()
 
     @abstractmethod
-    def drawText(self, context, rectangle, color, text):
+    def drawNumber(self, context, rectangle, color, number):
         """
         Draw some text in the underlying UI framework
         :param context: drawing context supplied by framework
         :param rectangle: list (of size 4) of rectangle base co-ordinates and size
         :param color: list (of size 3) of RGB colors
-        :param text: text to draw at supplied location
+        :param number: number to draw at supplied location
         :return:
+        """
+        raise NotImplementedError()
+
+    @abstractmethod
+    def getWindowSize(self):
+        """
+        Get the size of the window from the underlying UI framework
+        :return: list (of size 2) of window width and height
         """
         raise NotImplementedError()
 
     def paintGame(self, context):
         # Grab the latest state of game
         grid_state = self.game.get_grid_state()
-        game_state = self.game.get_game_state()
 
         cell_loc = [int(self.start_loc_x), int(self.start_loc_y)]
         rect = [cell_loc[0], cell_loc[1], self.square_size, self.square_size]
@@ -88,7 +94,7 @@ class CommonUI(object):
                     self.drawRect(context, rect, CommonUI.CELL_COLOR)
                 # It must be a number, draw it as such
                 else:
-                    self.drawText(context, rect, CommonUI.CELL_COLOR, grid_state[y][x])
+                    self.drawNumber(context, rect, CommonUI.CELL_COLOR, grid_state[y][x])
 
                 # Move the rectangles start location in Y forward
                 rect[1] += int((1 + CommonUI.CELL_GAP_FACTOR) * self.square_size)
@@ -113,10 +119,11 @@ class CommonUI(object):
         # We want all cells to be squares, so lets find the dimension
         # that allows us to fit everything in using squares
         # depending on the resolution and cell size in each dimension
-        square_size_x = ((1 - CommonUI.WINDOW_MARGIN) * self.size().width()) /\
+        windowsize = self.getWindowSize()
+        square_size_x = ((1 - CommonUI.WINDOW_MARGIN) * windowsize[0]) /\
                         (self.x_cell_count +
                             CommonUI.CELL_GAP_FACTOR * (self.x_cell_count - 1))
-        square_size_y = ((1 - CommonUI.WINDOW_MARGIN) * self.size().height()) /\
+        square_size_y = ((1 - CommonUI.WINDOW_MARGIN) * windowsize[1]) /\
                         (self.y_cell_count +
                             CommonUI.CELL_GAP_FACTOR * (self.y_cell_count - 1))
 
@@ -136,8 +143,8 @@ class CommonUI(object):
         display_size_y = self.y_cell_count * square_size +\
             self.gap_size * (self.y_cell_count - 1)
 
-        self.start_loc_x = (self.size().width() - display_size_x) / 2
-        self.start_loc_y = (self.size().height() - display_size_y) / 2
+        self.start_loc_x = (windowsize[0] - display_size_x) / 2
+        self.start_loc_y = (windowsize[1] - display_size_y) / 2
 
         self.grid_left = self.start_loc_x
         self.grid_right = self.start_loc_x + display_size_x

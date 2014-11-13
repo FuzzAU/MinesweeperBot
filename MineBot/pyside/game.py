@@ -5,6 +5,7 @@ from ..game.game import *
 from ..bot.bot import MineBot
 from ..ui.common import CommonUI
 
+
 class GameWindow(QWidget, CommonUI):
     # Create a signal to allow notification when the window is closing
     closing = Signal()
@@ -22,7 +23,7 @@ class GameWindow(QWidget, CommonUI):
         self.setMinimumWidth(CommonUI.MINIMUM_RESOLUTION)
         self.setMinimumHeight(CommonUI.MINIMUM_RESOLUTION)
 
-        ### Set up pens for drawing ###
+        # ## Set up pens for drawing ###
         # Create drawing pen with no width to allow filling without border
         self.rect_pen = QPen(GameWindow.toQColor(CommonUI.BACKGROUND_COLOR), 0, Qt.SolidLine)
         self.text_pen = QPen(GameWindow.toQColor(CommonUI.CELL_COLOR), 0, Qt.SolidLine)
@@ -47,7 +48,7 @@ class GameWindow(QWidget, CommonUI):
         p = QPainter()
 
         p.begin(self)
-        
+
         # Draw black background
         p.setBrush(GameWindow.toQColor(CommonUI.BACKGROUND_COLOR))
         p.drawRect(0, 0, self.size().width(), self.size().height())
@@ -83,10 +84,13 @@ class GameWindow(QWidget, CommonUI):
         context.setBrush(GameWindow.toQColor(color))
         context.drawRect(GameWindow.toQRect(rectangle))
 
-    def drawText(self, context, rectangle, color, text):
+    def drawNumber(self, context, rectangle, color, number):
         context.setPen(self.text_pen)
         context.setBrush(GameWindow.toQColor(color))
-        context.drawText(GameWindow.toQRect(rectangle), Qt.AlignCenter, text)
+        context.drawText(GameWindow.toQRect(rectangle), Qt.AlignCenter, number)
+
+    def getWindowSize(self):
+        return [self.size().width(), self.size().height()]
 
     def mousePressEvent(self, event):
         event.accept()
