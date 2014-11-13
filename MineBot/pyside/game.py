@@ -28,6 +28,13 @@ class GameWindow(QWidget, CommonUI):
         self.rect_pen = QPen(GameWindow.toQColor(CommonUI.BACKGROUND_COLOR), 0, Qt.SolidLine)
         self.text_pen = QPen(GameWindow.toQColor(CommonUI.CELL_COLOR), 0, Qt.SolidLine)
 
+        # Move window to centre of screen (doesn't work well on multi-monitor)
+        qr = self.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+
+
     def startGame(self, grid_size, mine_count):
         """ Start a new game
 

@@ -87,6 +87,12 @@ class SizeDialog(QWidget):
         # Set window layout to the vertical layout
         self.setLayout(self.layout)
 
+#       # Move window to centre of screen (doesn't work well on multi-monitor)
+        qr = self.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+
     def update_mine_count(self):
         """ Update the number of mines
 
