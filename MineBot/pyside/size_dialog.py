@@ -19,11 +19,13 @@ class SizeDialog(QWidget):
 
     def __init__(self, exit_handler):
         """ Initialise window and build form components """
-
         QWidget.__init__(self)
 
         # Create game interface
         self.game = GameWindow()
+        # Connect to game window closing signal
+        self.game.closing.connect(self.on_game_close)
+
         # Store reference to handler that will allow us to request an exit
         self.exit_handler = exit_handler
 
@@ -86,8 +88,10 @@ class SizeDialog(QWidget):
         self.setLayout(self.layout)
 
     def update_mine_count(self):
-        """ Update the number of mines in the game based on the number of
-            squares on the board
+        """ Update the number of mines
+
+        The number of mines is updated in the game based on the number of
+        squares on the board
         """
         board_squares = self.x_size.value() * self.y_size.value()
         num_mines = int(board_squares * MINE_COUNT_FACTOR)
@@ -100,11 +104,13 @@ class SizeDialog(QWidget):
 
     @Slot()
     def on_size_changed(self):
+        """ Requested size of board has changed """
         self.update_mine_count()
 
     @Slot()
     def on_start(self):
         """ Start a minesweeper game with the parameters given in this form """
+        self.game.startGame([self.x_size.value(), self.y_size.value()], self.mine_count.value())
         self.game.show()
         self.hide()
 
@@ -112,3 +118,8 @@ class SizeDialog(QWidget):
     def on_exit(self):
         """ Exit the game """
         self.exit_handler.exit()
+
+    @Slot()
+    def on_game_close(self):
+        """ Handle game window being closed """
+        self.show()
