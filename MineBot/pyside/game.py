@@ -34,7 +34,6 @@ class GameWindow(QWidget, CommonUI):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-
     def startGame(self, grid_size, mine_count):
         """ Start a new game
 
@@ -111,8 +110,11 @@ class GameWindow(QWidget, CommonUI):
         elif event.button() == Qt.RightButton:
             self.handle_flag_cell(selected_cell)
 
+        # Update painting of window
         self.update()
+        self.checkGameState()
 
+    def checkGameState(self):
         # Check if player has lost of won the game
         game_state = self.game.get_game_state()
         if game_state == GameState.WON:
@@ -123,6 +125,19 @@ class GameWindow(QWidget, CommonUI):
             QMessageBox.information(self, "Boo", "Too bad, you lost :-(")
             self.hide()
             self.closing.emit()
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_F:
+            f = self.bot.auto_flag()
+            print 'Auto-flagged ' + str(f) + ' mines'
+        if event.key() == Qt.Key_C:
+            c = self.bot.auto_clear()
+            print 'Auto-cleared ' + str(c) + ' cells'
+        if event.key() == Qt.Key_S:
+            self.bot.auto_step()
+
+        self.update()
+        self.checkGameState()
 
     def closeEvent(self, event):
         """ Close the game window and go back to dialog to show size """
